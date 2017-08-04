@@ -9,6 +9,7 @@ export default class Point extends Geometry {
     super();
     this.x = x;
     this.y = y;
+    this.geoType = 'Point';
   }
 
   getBounds () {

@@ -36,6 +36,11 @@ export class Bounds {
     this.bottom = y1;
     this.top = y2;
   }
+  getCenter () {
+    const w = this.right - this.left;
+    const h = this.top - this.bottom;
+    return new Position(this.left + w / 2, this.bottom + h / 2);
+  }
 }
 
 

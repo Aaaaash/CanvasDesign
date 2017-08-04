@@ -3,6 +3,7 @@
  */
 import CanvasDesign, { Position } from './CanvasDesign';
 import Point from './Geometry/Point';
+import Circle from './Geometry/Circle';
 
 export default class Canvas {
   constructor (layer) {
@@ -46,8 +47,11 @@ export default class Canvas {
   }
 
   draw (geometry, style, id) {
-    if (geometry instanceof Point) {
+    if (geometry.geoType === 'Point') {
       this.drawPoint(geometry, style, id);
+    }
+    if (geometry.geoType === 'Circle') {
+      this.drawCircle(geometry, style, id);
     }
   }
 
@@ -55,7 +59,7 @@ export default class Canvas {
     const radius = style.pointRadius;
     const twoPi = Math.PI * 2;
     const pt = this.getLocalXY(geometry);
-
+    
     if (style.fill) {
       this.setCanvasStyle('fill', style);
       this.context.beginPath();
@@ -67,6 +71,27 @@ export default class Canvas {
       this.setCanvasStyle('stroke', style);
       this.context.beginPath();
       this.context.arc(pt.x, pt.y, radius, 0, twoPi, true);
+      this.context.stroke();
+    }
+
+    this.setCanvasStyle('reset');
+  }
+
+  drawCircle (geometry, style, id) {
+    const radius = geometry.radius;
+    const twoPi = Math.PI * 2;
+    const pt = this.getLocalXY(geometry);
+    if (style.fill) {
+      this.setCanvasStyle('fill', style);
+      this.context.beginPath();
+      this.context.arc(pt.x, pt.y, radius / this.layer.res, 0, twoPi, true);
+      this.context.fill();
+    }
+
+    if (style.stroke) {
+      this.setCanvasStyle('stroke', style);
+      this.context.beginPath();
+      this.context.arc(pt.x, pt.y, radius / this.layer.res, 0, twoPi, true);
       this.context.stroke();
     }
 
@@ -88,10 +113,10 @@ export default class Canvas {
   }
 
   getLocalXY (point) {
-    const resolution = this.layer.zoom / 100;
+    const resolution = this.layer.getRes();
     const extent = this.layer.bounds;
     const x = (point.x * resolution + (-extent.left * resolution));
     const y = ((extent.top * resolution) - point.y * resolution);
-    return new Position(x, y);
+    return {x: x, y: y};
   }
 }
