@@ -12,19 +12,17 @@ window.canvasDesign = new CanvasDesign();
 const div = document.querySelector('#app');
 const layer = new Layer(div);
 var circleStyle = {fillColor:"blue", fill:true, stroke:true, fillOpacity:1, strokeOpacity:1};
-var imgStyle = {fill:true, stroke:true, fillOpacity:1, strokeOpacity:1};
+var imgStyle = {fill:true, stroke:true, fillOpacity:1, strokeOpacity:1, fixedSize: false};
 let vectors = [];
-// for(var i = 0; i<10; i++) {
-//   let point = new Point((Math.random()*400-200), (Math.random()*300-150), 5);
-//   vectors.push(new Vector(point));
-// }
 
 const c = new Circle(50, 50, 10);
 const vec = new Vector(c);
 vec.style = circleStyle;
 vectors.push(vec);
-const img = new Img(new Point((Math.random()*400-200), (Math.random()*300-150)), plane);
-vectors.push(new Vector(img, imgStyle));
+const img = new Img(new Point(200, 200), plane);
+const vecImage = new Vector(img);
+vecImage.style = imgStyle;
+vectors.push(vecImage);
 
 layer.addVectors(vectors);
 

@@ -101,8 +101,10 @@ export default class Canvas {
     this.setCanvasStyle('reset');
   }
 
-  drawImage (geometry, style, id) {
+  drawImage (geo, sty, id) {
     let img;
+    let style = sty;
+    let geometry = geo;
     const canvas = this;
     if (!geometry.useUrl) {
       img = geometry.image;
@@ -118,7 +120,7 @@ export default class Canvas {
       var fixedSize = style.fixedSize;
       var pt = canvas.getLocalXY(geometry.point);
       var width = style.width || img.width;
-      var height = style.width || img.height;
+      var height = style.height || img.height;
       if (fixedSize) {
         var offsetX = width / 2;
         var offsetY = height / 2;

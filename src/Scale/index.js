@@ -12,7 +12,7 @@ export default class Scale {
 
   wheelChange (e) {
     const layer = this.layer;
-    const delta = (e.wheelDelta / 120) * 30;
+    const delta = e.wheelDelta ? (e.wheelDelta / 120) * 30 : -e.detail / 3 * 30;
     const deltalX = layer.size.w / 2 - (e.offsetX || e.layerX);
     const deltalY = (e.offsetY || e.layerY) - layer.size.h / 2;
 

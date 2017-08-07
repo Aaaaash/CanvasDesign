@@ -3,7 +3,8 @@
  */
 import Canvas from '../Canvas';
 import Scale from '../Scale';
-import Pan from '../Pan/';
+import Pan from '../Pan';
+import AideLayer from '../AideLayer';
 import CanvasDesign from '../CanvasDesign';
 import { Size, Bounds, DefaultStyle, Position } from '../CanvasDesign';
 
@@ -17,17 +18,19 @@ export default class Layer {
     this.bounds = new Bounds(-size.w / 2, -size.h / 2, size.w / 2, size.h / 2);
     this.center = this.bounds.getCenter();
     this.getRes();
-    this.scale = new Scale(this);
-    this.pan = new Pan(this);
     // 缩放比
     this.zoom = 100;
     this.vectors = {};
     this.vectorsCount = 0;
     this.renderer = new Canvas(this);
+    this.scale = new Scale(this);
+    this.pan = new Pan(this);
   }
 
   addVectors (vectors) {
     this.renderer.lock = true;
+    this.aideLayer = new AideLayer(this);
+    this.aideLayer.addVectors(vectors);
     for (let i = 0, len = vectors.length; i < len; i ++) {
       if (i === len - 1) this.renderer.lock = false;
       this.vectors[vectors[i].id] = vectors[i];
@@ -52,6 +55,7 @@ export default class Layer {
   }
 
   moveTo (zoom, center) {
+    this.aideLayer.scaleTo(zoom, center);
     this.zoom = zoom;
     if (!center) {
       center = this.center;
