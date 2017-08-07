@@ -25,7 +25,6 @@ export default class Canvas {
 
   drawGeometry (geometry, style) {
     this.geometrys[geometry.id] = [geometry, style];
-
     if (!this.lock) {
       this.redraw();
     }

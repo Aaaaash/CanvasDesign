@@ -53,14 +53,12 @@ right.onclick = function() {
 }
 
 point.onclick = function addPoint() {
-	var vectors = [];
 	var point = new Point((Math.random()*400-200), (Math.random()*300-150));
 	vectors.push(new Vector(point));
 	layer.addVectors(vectors);
 }
 
 circle.onclick = function addCircle() {
-	var vectors = [];
 	var circle = new Circle((Math.random()*400-200), (Math.random()*300-150), Math.random()*10 + 5);
 	var vector = new Vector(circle);
 	vector.style = circleStyle;

@@ -72,7 +72,6 @@ export default class Layer {
     );
     this.bounds = bounds;
     let index = 0;
-    this.renderer.lock = true;
     for(let id in this.vectors) {
       index ++;
       if (index == this.vectorsCount) {
