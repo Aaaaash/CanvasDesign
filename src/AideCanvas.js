@@ -1,8 +1,12 @@
+import drawDashRect from './utils/drawDashLine';
+
 export default class AideCanvas {
   constructor (aidelayer) {
     this.aidelayer = aidelayer;
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
+    this.lock = true;
+    this.controls = {};
     this.setSize(aidelayer.layer.size);
     aidelayer.layer.div.insertBefore(this.canvas, aidelayer.layer.renderer.canvas);
   }
@@ -17,14 +21,31 @@ export default class AideCanvas {
   }
 
   drawAuxiliaryLine (control) {
-    // this.ctx.clearRect(0, 0, this.aidelayer.size.w, this.aidelayer.size.h);
+    this.controls[control.id] = control;
+    if (!this.lock) {
+      this.redraw();
+    }    
+  }
+
+  redraw () {
+    this.ctx.clearRect(0, 0, this.aidelayer.size.w, this.aidelayer.size.h);
+    if (!this.lock) {
+      for (let id in this.controls) {
+        if (this.controls.hasOwnProperty(id)) {
+          this.draw(this.controls[id]);
+        }
+      }
+    }
+  }
+
+  draw (control) {
     const { width, height, x, y } = control;
     const pt = this.getLocalXY({ x, y });
     const res = this.aidelayer.getRes();
     const offsetX = width / 2 / res;
     const offsetY = height / 2 / res;
-    this.ctx.fillStyle = 'rgba(0,0,0,0.3)';
-    this.ctx.fillRect(pt.x - offsetX, pt.y - offsetY, width / res, height / res);
+    this.ctx.strokeStyle = '#666';
+    drawDashRect(this.ctx, pt.x - offsetX, pt.y - offsetY, width / res, height / res);
   }
 
   getLocalXY (point) {

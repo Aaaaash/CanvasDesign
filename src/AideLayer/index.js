@@ -9,14 +9,15 @@ export default class AideLayer {
     this.getRes = layer.getRes.bind(this);
     this.center = layer.center;
     this.size = layer.size;
+    this.vectors = {};
     this.renderer = new AideCanvas(this);
   }
 
   addVectors (vectors) {
-    this.vectors = vectors;
-    vectors.forEach((vector) => {
+    vectors.forEach((vector, index) => {
+      if (index === vectors.length - 1) this.renderer.lock = false;
+      this.vectors[vector.id] = vector;
       this.drawControl(vector);
-      
     });
   }
 
@@ -28,7 +29,6 @@ export default class AideLayer {
     const res = this.getRes();
     const width = this.size.w * res;
     const height = this.size.h * res;
-
     const bounds = new Bounds(
       center.x - width / 2,
       center.y - height / 2,
@@ -36,9 +36,8 @@ export default class AideLayer {
       center.y + height / 2
     );
     this.bounds = bounds;
-    this.renderer.ctx.clearRect(0, 0, this.size.w, this.size.h);
-    for(let id in this.vectors) {
-      this.drawControl(this.vectors[id]);
+    for (let i in this.vectors) {
+      this.drawControl(this.vectors[i]);
     }
   }
 
@@ -53,16 +52,14 @@ export default class AideLayer {
         const image = new Image();
         image.src = vector.geometry.image;
         image.onload = () => {
-          let width = 0;
-          let height = 0;
           width = image.width;
           height = image.height;
-          this.renderer.drawAuxiliaryLine({ width, height, x, y });
+           this.renderer.drawAuxiliaryLine({ width, height, x, y, id: vector.id, });
         }
       } else {
         width = vector.geometry.image.width;
         height = vector.geometry.image.height;
-        this.renderer.drawAuxiliaryLine({ width, height, x, y });
+        this.renderer.drawAuxiliaryLine({ width, height, x, y, id: vector.id, });
       }
     }
     if (geoType === 'Circle') {
