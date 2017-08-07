@@ -6,7 +6,7 @@ export default class Scale {
   constructor (layer) {
     this.layer = layer;
     this.div = layer.div;
-    this.Events = [["mousewheel", Scale.prototype.wheelChange],["DOMMouseScroll", Scale.prototype.DOMScroll]];
+    this.Events = [["mousewheel", this.wheelChange],["DOMMouseScroll", this.DOMScroll]];
     this.active();
   }
 

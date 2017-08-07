@@ -53,6 +53,9 @@ export default class Canvas {
     if (geometry.geoType === 'Circle') {
       this.drawCircle(geometry, style, id);
     }
+    if (geometry.geoType === 'Img') {
+      this.drawImage(geometry, style, id);
+    }
   }
 
   drawPoint (geometry, style, id) {
@@ -98,6 +101,42 @@ export default class Canvas {
     this.setCanvasStyle('reset');
   }
 
+  drawImage (geometry, style, id) {
+    let img;
+    const canvas = this;
+    if (!geometry.useUrl) {
+      img = geometry.image;
+      imageLoad();
+    } else {
+      img = new Image();
+      img.src = geometry.image;
+      img.onload = imageLoad;
+    }
+
+    function imageLoad () {
+      canvas.setCanvasStyle("fill", style);
+      var fixedSize = style.fixedSize;
+      var pt = canvas.getLocalXY(geometry.point);
+      var width = style.width || img.width;
+      var height = style.width || img.height;
+      if (fixedSize) {
+        var offsetX = width / 2;
+        var offsetY = height / 2;
+        canvas.context.drawImage(img, pt.x - offsetX, pt.y - offsetY, width, height);
+      } else {
+        var res = canvas.layer.getRes();
+        var offsetX = width / 2 / res;
+        var offsetY = height / 2 / res;
+        canvas.context.drawImage(img, pt.x - offsetX, pt.y - offsetY, width / res, height / res);
+      }
+      if (geometry.useUrl) {
+        geometry.useUrl = false;
+        geometry.image = img;
+      }
+      canvas.setCanvasStyle("reset");
+    }
+  }
+
   setCanvasStyle (type, style) {
     if (type === "fill") {     
       this.context.globalAlpha = style['fillOpacity'];
@@ -115,8 +154,8 @@ export default class Canvas {
   getLocalXY (point) {
     const resolution = this.layer.getRes();
     const extent = this.layer.bounds;
-    const x = (point.x * resolution + (-extent.left * resolution));
-    const y = ((extent.top * resolution) - point.y * resolution);
+    const x = (point.x / resolution + (-extent.left / resolution));
+    const y = ((extent.top / resolution) - point.y / resolution);
     return {x: x, y: y};
   }
 }

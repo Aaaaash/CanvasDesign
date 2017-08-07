@@ -3,6 +3,7 @@
  */
 import Canvas from '../Canvas';
 import Scale from '../Scale';
+import Pan from '../Pan/';
 import CanvasDesign from '../CanvasDesign';
 import { Size, Bounds, DefaultStyle, Position } from '../CanvasDesign';
 
@@ -17,6 +18,7 @@ export default class Layer {
     this.center = this.bounds.getCenter();
     this.getRes();
     this.scale = new Scale(this);
+    this.pan = new Pan(this);
     // 缩放比
     this.zoom = 100;
     this.vectors = {};
@@ -57,7 +59,6 @@ export default class Layer {
     const res = this.getRes();
     const width = this.size.w * res;
     const height = this.size.h * res;
-    console.log(center);
     // 移动时获取新的视图范围
     const bounds = new Bounds(
       center.x - width / 2,
@@ -79,7 +80,7 @@ export default class Layer {
 
   getPositionFromPX (px) {
     return new Position((px.x + this.bounds.left / this.res) * this.res,
-      (this.bounds / this.res - px.y) * this.res);
+      (this.bounds.top / this.res - px.y) * this.res);
   }
 
   getResFromZoom (zoom) {

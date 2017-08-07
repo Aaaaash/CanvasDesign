@@ -2,6 +2,8 @@ import CanvasDesign from './CanvasDesign';
 import Layer from './Layer';
 import Point from './Geometry/Point';
 import Circle from './Geometry/Circle';
+import Img from './Geometry/Img';
+import plane from './plane.png';
 
 import Vector from './Vector';
 
@@ -10,13 +12,21 @@ window.canvasDesign = new CanvasDesign();
 const div = document.querySelector('#app');
 const layer = new Layer(div);
 var circleStyle = {fillColor:"blue", fill:true, stroke:true, fillOpacity:1, strokeOpacity:1};
-// let vectors = [];
+var imgStyle = {fill:true, stroke:true, fillOpacity:1, strokeOpacity:1};
+let vectors = [];
 // for(var i = 0; i<10; i++) {
 //   let point = new Point((Math.random()*400-200), (Math.random()*300-150), 5);
 //   vectors.push(new Vector(point));
 // }
 
-// layer.addVectors(vectors);
+const c = new Circle(50, 50, 10);
+const vec = new Vector(c);
+vec.style = circleStyle;
+vectors.push(vec);
+const img = new Img(new Point((Math.random()*400-200), (Math.random()*300-150)), plane);
+vectors.push(new Vector(img, imgStyle));
+
+layer.addVectors(vectors);
 
 const circle = document.querySelector('#circle');
 const point = document.querySelector('#point');
@@ -44,18 +54,18 @@ right.onclick = function() {
   layer.moveTo(layer.zoom);
 }
 
-  point.onclick = function addPoint() {
-		var vectors = [];
-		var point = new Point((Math.random()*400-200), (Math.random()*300-150));
-		vectors.push(new Vector(point));
-		layer.addVectors(vectors);
-	}
-	
-	circle.onclick = function addCircle() {
-		var vectors = [];
-		var circle = new Circle((Math.random()*400-200), (Math.random()*300-150), Math.random()*10 + 5);
-		var vector = new Vector(circle);
-		vector.style = circleStyle;
-		vectors.push(vector);
-		layer.addVectors(vectors);
-	}
+point.onclick = function addPoint() {
+	var vectors = [];
+	var point = new Point((Math.random()*400-200), (Math.random()*300-150));
+	vectors.push(new Vector(point));
+	layer.addVectors(vectors);
+}
+
+circle.onclick = function addCircle() {
+	var vectors = [];
+	var circle = new Circle((Math.random()*400-200), (Math.random()*300-150), Math.random()*10 + 5);
+	var vector = new Vector(circle);
+	vector.style = circleStyle;
+	vectors.push(vector);
+	layer.addVectors(vectors);
+}
